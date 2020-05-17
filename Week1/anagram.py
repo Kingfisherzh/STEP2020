@@ -17,7 +17,7 @@ def Anagram(word):
 	new_dic = sorted(dic, key=lambda x:x[0])
 
 	dic_len = len(new_dic)
-	anagram = binarySearch(sorted_random_word, new_dic, 0, dic_len)
+	anagram = binarySearch(sorted_random_word, new_dic, 0, dic_len-1)
 	if anagram: 
 		return anagram[1] 
 	else: 
@@ -25,8 +25,8 @@ def Anagram(word):
 
 def binarySearch(word, new_dic, l, r):
 	word_len = len(word)
-	if r >= 1 and l <= r:
-		mid = int((l+r)/2)
+	if l <= r:
+		mid = int((l+r+1)/2)
 		#print(new_dic[mid][0],  l, r)
 		if new_dic[mid][0] == word:
 			return new_dic[mid]
@@ -39,5 +39,5 @@ def binarySearch(word, new_dic, l, r):
 
 
 if __name__ == '__main__':
-	word = 'debe'
+	word = 'uub'
 	print('Anagram is', Anagram(word.lower()))

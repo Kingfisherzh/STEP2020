@@ -26,31 +26,44 @@ def HighScoreSolution(soup,dic):
 		#print(words)
 		for prev in words:
 			word = prev + alp
-			anagram = binarySearch(word, dic, 1, len_dic)
+			word = wordSort(word)
+			anagram = binarySearch(word, dic, 1, len_dic-1)
 			score = getScore(anagram)
 			if anagram and highestScore < score:
 				solution = [anagram, score]
 				anagrams.append([anagram, getScore(anagram)])
 				highestScore = score
-				
+
 			candidates.append(word)
-	print(anagrams)		
-	print(solution)
+	#print(anagrams)		
+	#print(solution)
 	if solution:
 		return solution[0][1]
 	else:
 		return None
 
+def wordSort(word):
+	letters = sorted(word)
+	word = ''
+	for l in letters:
+		word = word + l
+	return word
+		
 def Submit(driver,dic):
 	for i in range(10):
 		soup = BeautifulSoup(driver.page_source, features='html.parser')
 		solution = HighScoreSolution(soup,dic)
-
+		last = False
 		if solution:
 			alphabets = list(solution)
 			for alp in alphabets:
 				alp = alp.upper()
-				if alp == 'Q': alp = 'Qu'
+				if alp == 'Q': 
+					alp = 'Qu'
+					last = True
+				elif alp == 'U' and last == True:
+					last = False
+					continue	
 				driver.find_element_by_xpath("//div[contains(text(),'" + alp + "')]").click()
 			driver.find_element_by_xpath("//input[@value = 'Submit']").click()
 		else:
@@ -83,9 +96,12 @@ def getScore(word):
 
 def binarySearch(word, new_dic, l, r):
 	word_len = len(word)
-	if r >= 1 and l < r:
-		mid = int((l+r)/2)
+	#print(word)
+	#print(l,r)
+	if l <= r:
+		mid = int((l+r+1)/2)
 		#print(word,l,r)
+		#print(new_dic[mid])
 		if new_dic[mid][0] == word:
 			return new_dic[mid]
 		elif new_dic[mid][0] > word:
@@ -116,8 +132,8 @@ if __name__ == '__main__':
 	driver = webdriver.Chrome()
 	driver.get(url)
 	dic = sortDictionary()
-	#Submit(driver,dic)
-	soup = BeautifulSoup(driver.page_source, features='html.parser')
-	HighScoreSolution(soup,dic)
+
+	Submit(driver,dic)
+	#driver.find_element_by_xpath("//a[contains(text(),'Start a new game')]").click()
 
 		
