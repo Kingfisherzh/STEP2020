@@ -28,7 +28,7 @@ class Cache:
 	# Return the URLs stored in the cache. The URLs are ordered
 	# in the order in which the URLs are mostly recently accessed.
 	def get_pages(self):
-		# return a list of keys in the reverse order
+		# return a list of values in the reverse order
 		pages = []
 		values = list(self.dic.values())
 		if self.dic:
