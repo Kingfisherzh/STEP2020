@@ -34,6 +34,16 @@ def readDivide(line, index):
   return token, index + 1
 
 
+def readLeftPara(line, index):
+  token = {'type': 'LEFTPARA'}
+  return token, index + 1
+
+
+def readRightPara(line, index):
+  token = {'type': 'RIGHTPARA'}
+  return token, index + 1
+
+
 def tokenize(line):
   tokens = []
   index = 0
@@ -47,11 +57,40 @@ def tokenize(line):
     elif line[index] == '*':
       (token, index) = readMultiply(line, index)
     elif line[index] == '/':
-      (token, index) = readDivide(line, index)  
+      (token, index) = readDivide(line, index)
+    elif line[index] == '(':
+      (token, index) = readLeftPara(line, index)
+    elif line[index] == ')':
+      (token, index) = readRightPara(line, index)   
     else:
       print('Invalid character found: ' + line[index])
       exit(1)
     tokens.append(token)
+  return tokens
+
+def paraFirst(tokens):
+  index = 0
+  left_paras = []
+  while index < len(tokens):
+
+    # Store the position of left paranthesis
+    if tokens[index]['type'] == 'LEFTPARA':
+      left_paras.append(index)
+    elif tokens[index]['type'] == 'RIGHTPARA':
+      value = evaluate(tokens[left_paras[-1] + 1 : index])
+
+      # Remove the items between the parantheses 
+      for i in range(left_paras[-1], index + 1):
+        tokens.pop(left_paras[-1])
+
+      # Add the calculated result to the place where left para locates
+      tokens.insert(left_paras[-1], {'type': 'NUMBER', 'number': value})
+      # Let index start from the left para
+      index = left_paras[-1]
+      left_paras.pop()
+    
+    index += 1
+
   return tokens
 
 
@@ -102,6 +141,7 @@ def second_evaluate(tokens):
 
 def test(line):
   tokens = tokenize(line)
+  tokens = paraFirst(tokens)
   actualAnswer = evaluate(tokens)
   expectedAnswer = eval(line)
   if abs(actualAnswer - expectedAnswer) < 1e-8:
@@ -113,12 +153,17 @@ def test(line):
 # Add more tests to this function :)
 def runTest():
   print("==== Test started! ====")
+
   test("1+2")
   test("1.0+2.1-3")
   test("5+90/3+2-5")
   test("3/2*1.5")
   test("0.50*1.0/1/20")
   test("-9/3*2.5/0.2")
+  test("(2+3)")
+  test("(3+2)/(5+7)")
+  test("(2+((3+2)/(5+7)))")
+  test("(7*7.0)*7/9-0.3*7")
   print("==== Test finished! ====\n")
 
 runTest()
