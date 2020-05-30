@@ -1,0 +1,13 @@
+Q2
+Because for large-scale database, it usually needs a very large key table to avoid the collision that might happen. Or to create new lists or hash tables that belong to each hash value. Either way will use a lot of memory and needs to allocate memory space in advance.
+As for binary tree, there is no collision. Besides, the memory can be allocated only when a node is added or deleted.
+
+Update:
+Data stored in binary tree is ordered while in hash table it is not.
+We can search for the number closest to 10 by searching and comparing in a binary tree with O(log(n)). But we cannot directly find this number in a hash table with O(1) because the keys are irrelevant to each other.
+
+Q3
+We can design a dictionary with keys of URL and values of web pages.
+Since pairs stored in dictionary follows with the order of being added, we can use dict.keys() to clarify things such as which pair is least recently or most recently added.
+
+More details can be found in my code for Q4 :)

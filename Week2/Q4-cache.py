@@ -1,5 +1,12 @@
 import sys
 
+class Node:
+	def __init__(self, key=None, value=None):
+		self.contents = key
+		self.url = value
+		self.prev = None
+		self.next = None
+
 # Cache is a data structure that stores the most recently accessed N pages.
 # See the below test cases to see how it should work.
 class Cache:
@@ -7,7 +14,11 @@ class Cache:
 	# |n|: The size of the cache.
 	def __init__(self, n):
 		self.length = n
-		self.dic = {}
+		self.head = Node()
+		self.tail = Node()
+		self.hashmap = {}	# hashmap = {[node.contents: node.url], ...}
+		self.head.next = self.tail
+		self.tail.prev = self.head
 
 
 	# Access a page and update the cache so that it stores the most
@@ -15,28 +26,60 @@ class Cache:
 	# |url|: The accessed URL
 	# |contents|: The contents of the URL
 	def access_page(self, url, contents):
-		# if contents exist, remove this key-value pair
-		exist = self.dic.pop(contents, False)
-		# if over long and contents don't exist, pop the first pair
-		if not exist and len(self.dic) == self.length:
-			first = list(self.dic.keys())[0]
-			self.dic.pop(first)
-
-		self.dic[contents] = url
+		# Contents in keys
+		if contents in self.hashmap.keys():
+			node = self.hashmap[contents]
+			Cache.move_out(self, node)
+		# Contents not in keys
+		else:
+			if len(self.hashmap) == self.length:
+				Cache.remove_first_node(self, self.head.next)
+			# Create new node
+			node = Node(contents, url)
+			self.hashmap[contents] = node
+		# Add the new node to before tail
+		if len(self.hashmap) <= self.length:
+			Cache.add_to_tail(self, node)	
 		pass
+	
+	def remove_first_node(self, first):
+		self.hashmap.pop(first.contents)
+		# Build link between head and new 1st node
+		self.head.next = first.next
+		first.next.prev = self.head
+		# Clear link from old 1st node
+		first.next = None
+		first.prev = None
+		pass
+
+
+	def move_out(self, node):
+		node.prev.next = node.next
+		node.next.prev = node.prev
+		pass
+
+
+	def add_to_tail(self, node):
+		# Link between last node and new node
+		self.tail.prev.next = node
+		node.prev = self.tail.prev
+		# Link between new node and tail
+		node.next = self.tail
+		self.tail.prev = node
+		pass
+
+
 
 	# Return the URLs stored in the cache. The URLs are ordered
 	# in the order in which the URLs are mostly recently accessed.
 	def get_pages(self):
-		# return a list of values in the reverse order
 		pages = []
-		values = list(self.dic.values())
-		if self.dic:
-			for i in range(len(self.dic)-1, -1,-1):
-				pages.append(values[i])
-			return pages
-		else:
-			return []	
+		node = self.tail
+		while node.prev:
+			if node.url:
+				pages.append(node.url)
+			node = node.prev
+		return pages	
 		pass
 
 
@@ -44,6 +87,7 @@ class Cache:
 def cache_test():
 	# Set the size of the cache to 4.
 	cache = Cache(4)
+
 	# Initially, no page is cached.
 	equal(cache.get_pages(), [])
 	# Access "a.com".

@@ -2,8 +2,9 @@ import matplotlib.pyplot as plt
 import time
 import math
 
-total = 1000
-num = [s for s in range(1,total,50)]
+total = 100
+num = [s for s in range(1,total,1)]
+value = 0
 
 a = [[] for _ in range(total)]
 b = [[] for _ in range(total)]
@@ -21,9 +22,13 @@ for n in num:
 
 	start = time.time()
 
-	for i in range(n):
-		for j in range(n):
-			c[i].append(a[i][j]*b[i][j])
+	# Time complexity is O(n^3)
+	
+	for row in range(n):
+		for col in range(n):
+			for k in range(n):
+				value = value + a[col][k]*b[k][col]
+				c[row].append(value)
 	end = time.time()
 	last = end-start
 	times.append(last)
