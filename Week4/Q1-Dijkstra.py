@@ -8,8 +8,7 @@ def Dijkstra(node_dist, current_node, target):
 		shortest_dist[str(i)] = 999							# Initialize the distance
 	shortest_path = [[] for _ in range(num_station)]		# Record paths
 	shortest_dist[str(current_node)] = 0					# Distance from start node is 0
-	record = []
-
+	
 	while not_visited:
 		if current_node in not_visited:
 			if node_dist[str(current_node)]:
@@ -19,26 +18,23 @@ def Dijkstra(node_dist, current_node, target):
 						for prev_node in shortest_path[int(current_node)]:
 							shortest_path[int(node)].append(prev_node)
 						shortest_path[int(node)].append(str(current_node))
-						record.append([str(node), shortest_dist[str(node)]])
-
-
+						
+			
+			shortest_record = sorted(shortest_dist.items(), key=lambda shortest_dist:shortest_dist[1])
 			not_visited.remove(int(current_node))
-
-			record = sorted(record, key=lambda record:record[1])
-			current_node = record[0][1]
+			current_node = shortest_record[0][0]
 			count = 0
 			# Find the node with the shortest distance as the next current node
 			# and meanwhile this node should have not been visited yet
 			
 			while int(current_node) not in not_visited:
-				if count == len(record)-1:
+				if count == 249:
 					print('shortest_path',shortest_path[target])
 					print('distance', shortest_dist[str(target)])
 					return
 				else:	 
 					count += 1
-					current_node = int(record[count][0])
-					
+					current_node = int(shortest_record[count][0])
 			
 				
 
@@ -56,8 +52,35 @@ if __name__ == '__main__':
 		dist = line.split('\t')[2].strip()
 		node_dist[start][end] = int(dist)		# {'0':{'1':2,'2':3}, '1':{'2':3}, ...} 
 
-	start_node = 1
+	start_node = 33
 	end_node = 198
 	Dijkstra(node_dist, start_node, end_node)
 
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
