@@ -1,0 +1,4 @@
+Variable a and the initial b in function foo are pointed to the same address.
+The items in the variables a and new b are saved in addresses other than the pointer address. These addresses are sorted with an 8-bit gap for each item.
+
+Since the initial b and a are pointed to the same address, when appending a new item to the old b, it will also affect a. But after a new b is defined in the function foo, its address will be different from the old b. Thus any modification to this new b will not affect a anymore. 
