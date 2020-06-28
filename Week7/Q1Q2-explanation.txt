@@ -1,0 +1,17 @@
+Q1
+My assumption is very close to the actual result.
+I drew a graph to show what happened for each kind of combination respectively in the inner loop and the middle loop.
+There are two rules to decide the speed.
+1. The slower combination must have more loops that have a vertical direction.
+2. A inner loop with a vertical direction will affect the speed more than a middle or outer loop.
+
+ikj and kji have 2 inner vertical loops -> slowest group
+ijk and jik have 1 inner vertical loop and 1 horizontal loop -> middle group
+	In the middle loop, ijk has 2 horizontal loops while jik has two vertical loops,
+	which makes ijk become obviously faster than jik.
+ikj and kij have 2 horizontal loops -> fastest group
+The subtle difference in each other group can also be explained by the direction difference in the middle loops.
+
+
+Q2
+My assumption is that since python is a kind of interpreter language, when it loops, it needs to interpret the content in the loop repeatedly. This will cost a majority of the time compared to the time cost difference between two kinds of for loops. 
